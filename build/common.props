@@ -1,0 +1,14 @@
+<Project>
+  <PropertyGroup>
+
+    <Authors>Aleksander Heintz</Authors>
+    <PackageLicenseUrl>https://opensource.org/licenses/MIT</PackageLicenseUrl>
+    <!--<PackageIconUrl>https://ctaggart.github.io/SourceLink/SourceLink128.jpg</PackageIconUrl>-->
+    <PackageProjectUrl>https://github.com/YoloDev/YoloDev.AspNetCore.Assets</PackageProjectUrl>
+    <PackageTags>aspnet mvc webpack assets</PackageTags>
+    <Description>Deal with assets that have generated names for dist.</Description>
+
+    <DebugType>embedded</DebugType>
+
+  </PropertyGroup>
+</Project>
