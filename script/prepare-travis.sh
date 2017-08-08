@@ -7,7 +7,3 @@ fi
 if [[ "$(git rev-parse --abbrev-ref HEAD)" != "master" ]]; then
   git fetch origin master:master
 fi
-
-pushd sample/SampleApp
-npm install
-popd

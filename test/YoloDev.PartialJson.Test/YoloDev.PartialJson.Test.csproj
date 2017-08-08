@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>    
+  <PropertyGroup>
     <TargetFramework>netcoreapp1.1</TargetFramework>
   </PropertyGroup>
 
@@ -11,7 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\src\YoloDev.PartialJson\YoloDev.PartialJson.csproj" />
+    <ProjectReference Include="..\..\src\YoloDev.PartialJson\YoloDev.PartialJson.csproj" />
   </ItemGroup>
 
   <ItemGroup>
