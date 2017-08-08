@@ -114,23 +114,18 @@ function get-prev-version-tag() {
 
   local tag=$(git describe --tags --abbrev=0 --match="v[0-9]*" 2> /dev/null)
   if ! [[ $? -eq 0 ]]; then
-    #local err=$((git describe --tags --abbrev=0 --match="v[0-9]*" 1> /dev/null) 2>&1)
-    local err=$(git describe --tags --abbrev=0 --match="v[0-9]*" 1> /dev/null 2>&1)
     say_verbose "${magenta:-}No version tags found${normal:-}"
-    say_verbose "Get tags error: $err"
     echo ""
     return
   fi
 
   until [[ "$tag" =~ $REGEX_SEMVER ]]; do
     say_verbose "git describe --tags --abbrev=0 --match=\"v[0-9]*\""
-    git describe --tags --abbrev=0 --match="v[0-9]*" >&3
+    git describe --tags --abbrev=0 --match="v[0-9]*" >&3 2> /dev/null
     say_verbose "$tag is not a valid version tag, looking for the next one..."
     tag=$(git describe --tags --abbrev=0 --match="v[0-9]*" "$tag^" 2> /dev/null)
     if ! [[ $? -eq 0 ]]; then
-      local err=$(git describe --tags --abbrev=0 --match="v[0-9]*" 1> /dev/null 2>&1)
       say_verbose "${magenta:-}No version tags found${normal:-}"
-      say_verbose "Get tags error: $err"
       echo ""
       return
     fi
