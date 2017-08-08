@@ -11,7 +11,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "sample", "sample", "{79C1E2
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YoloDev.PartialJson", "src\YoloDev.PartialJson\YoloDev.PartialJson.csproj", "{FF7E156B-F9A3-4218-BDDF-DBEC608A751E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YoloDev.PartialJson.Test", "YoloDev.PartialJson.Test\YoloDev.PartialJson.Test.csproj", "{77015384-6178-4B80-AF4A-60B758DFAD18}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YoloDev.PartialJson.Test", "test\YoloDev.PartialJson.Test\YoloDev.PartialJson.Test.csproj", "{77015384-6178-4B80-AF4A-60B758DFAD18}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
