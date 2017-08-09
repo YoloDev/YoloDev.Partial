@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using System;
 using Xunit;
 
@@ -46,6 +46,12 @@ namespace YoloDev.PartialJson.Test
 
       Assert.Equal("testing", partialResponse.Proxy.Foo);
       Assert.Equal(42, partialResponse.Proxy.Bar);
+
+      var target = new TestData();
+      partialResponse.Populate(target);
+
+      Assert.Equal("testing", target.Foo);
+      Assert.Equal(42, target.Bar);
     }
   }
 }

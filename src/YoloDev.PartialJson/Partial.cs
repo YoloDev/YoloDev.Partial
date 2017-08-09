@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
@@ -51,5 +51,71 @@ namespace YoloDev.PartialJson
       _set.ToImmutableDictionary(
         prop => nameConverter.GetName(prop),
         prop => Property.Get(prop, _proxy));
+
+    void IPartial.Populate(object target)
+    {
+      if (target == null)
+      {
+        throw new ArgumentNullException(nameof(target));
+      }
+
+      if (!(target is T typedTarget))
+      {
+        throw new ArgumentException($"Cannot populate object of type {target.GetType()}", nameof(target));
+      }
+
+      Populate(typedTarget);
+    }
+
+    void IPartial.Populate(object target, Predicate<PropertyInfo> propertyFilter)
+    {
+      if (target == null)
+      {
+        throw new ArgumentNullException(nameof(propertyFilter));
+      }
+
+      if (!(target is T typedTarget))
+      {
+        throw new ArgumentException($"Cannot populate object of type {target.GetType()}", nameof(target));
+      }
+
+      Populate(typedTarget, propertyFilter);
+    }
+
+    void IPartial.Populate(object target, IPropertyFilter propertyFilter)
+    {
+      if (target == null)
+      {
+        throw new ArgumentNullException(nameof(propertyFilter));
+      }
+
+      if (!(target is T typedTarget))
+      {
+        throw new ArgumentException($"Cannot populate object of type {target.GetType()}", nameof(target));
+      }
+
+      Populate(typedTarget, propertyFilter);
+    }
+
+    public void Populate(T target)
+    {
+      Populate(target, DefaultPropertyFilter.Instance);
+    }
+
+    public void Populate(T target, Predicate<PropertyInfo> propertyFilter)
+    {
+      Populate(target, new PredicatePropertyFilter(propertyFilter));
+    }
+
+    public void Populate(T target, IPropertyFilter propertyFilter)
+    {
+      foreach (var prop in _set)
+      {
+        if (propertyFilter.IncludeProperty(prop))
+        {
+          Property.Copy(prop, _proxy, target);
+        }
+      }
+    }
   }
 }
