@@ -1,3 +1,4 @@
+using Newtonsoft.Json;
 using System;
 using System.Collections.Immutable;
 using System.Linq.Expressions;
@@ -17,6 +18,7 @@ namespace YoloDev.PartialJson
     IImmutableDictionary<string, object> GetUpdates(Func<PropertyInfo, string> nameConverter);
   }
 
+  [JsonConverter(typeof(PartialConverter))]
   public interface IPartial<T> : IPartial
   {
     new T Proxy { get; }

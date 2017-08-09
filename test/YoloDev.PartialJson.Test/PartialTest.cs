@@ -23,7 +23,7 @@ namespace YoloDev.PartialJson.Test
     public void Test()
     {
       var json = "{\"Foo\":\"testing\",\"Bar\":42}";
-      var partialResponse = JsonConvert.DeserializeObject<Partial<TestData>>(json);
+      var partialResponse = JsonConvert.DeserializeObject<IPartial<TestData>>(json);
 
       var proxy = AssertIs<IPartialProxy>(partialResponse.Proxy);
       var partial = proxy.Partial;
