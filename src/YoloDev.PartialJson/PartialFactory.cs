@@ -1,4 +1,4 @@
-﻿using Castle.DynamicProxy;
+using Castle.DynamicProxy;
 
 namespace YoloDev.PartialJson
 {
@@ -12,9 +12,13 @@ namespace YoloDev.PartialJson
 
     internal T CreateProxy<T>(Partial<T> owner) where T : class
     {
+      // TODO: Filter interceptors, only run on Set & add PartialProxyInterceptor
+      var options = new ProxyGenerationOptions(new PartialProxyGenerationHook(typeof(T)));
+      options.AddMixinInstance(new PartialProxy<T>(owner));
+
       var proxy = _proxyGenerator.CreateClassProxy(
         typeof(T), 
-        new[] { typeof(IPartialProxy), typeof(IPartialProxy<T>) }, 
+        options,
         new PartialInterceptor<T>(owner));
 
       return (T)proxy;

@@ -1,8 +1,4 @@
-﻿using Castle.DynamicProxy;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
+using Castle.DynamicProxy;
 
 namespace YoloDev.PartialJson
 {
@@ -21,33 +17,13 @@ namespace YoloDev.PartialJson
       var method = invocation.GetConcreteMethod() ?? invocation.Method;
       var type = method.DeclaringType;
       var nonPublic = !method.IsPublic;
-      var prop = type
-        .GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)
-        .Where(p => p.GetSetMethod(nonPublic) == method || p.GetGetMethod(nonPublic) == method)
-        .FirstOrDefault();
+      var (prop, isGetter) = Property.Find(type, method);
 
-      if (prop.Name == nameof(IPartialProxy.Partial) 
-        && (type == typeof(IPartialProxy) 
-        || type.GetTypeInfo().IsGenericType 
-        && type.GetGenericTypeDefinition() == typeof(IPartialProxy<>)))
+      if (!isGetter)
       {
-        invocation.ReturnValue = _owner;
-        return;
+        _owner.SetProperties.Add(prop);
       }
 
-      if (prop == null)
-      {
-        invocation.Proceed();
-        return;
-      }
-
-      if (method == prop.GetGetMethod(nonPublic))
-      {
-        invocation.Proceed();
-        return;
-      }
-
-      _owner.Values[prop] = invocation.GetArgumentValue(0);
       invocation.Proceed();
     }
   }

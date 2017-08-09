@@ -11,20 +11,22 @@ namespace YoloDev.PartialJson
   public sealed class Partial<T> : IPartial<T>
     where T : class
   {
-    private readonly IDictionary<PropertyInfo, object> _values;
+    private readonly ISet<PropertyInfo> _set;
     private readonly T _proxy;
 
     [JsonConstructor]
     public Partial()
     {
-      _values = new Dictionary<PropertyInfo, object>();
+      _set = new HashSet<PropertyInfo>();
       _proxy = PartialFactory.Instance.CreateProxy<T>(this);
     }
 
-    internal IDictionary<PropertyInfo, object> Values => _values;
+    internal ISet<PropertyInfo> SetProperties => _set;
 
     object IPartial.Proxy => _proxy;
     public T Proxy => _proxy;
+
+    public bool IsSet(PropertyInfo propertyInfo) => _set.Contains(propertyInfo);
 
     public bool IsSet<R>(Expression<Func<T,R>> expr)
     {
@@ -39,15 +41,15 @@ namespace YoloDev.PartialJson
         throw new ArgumentException("Member expression must be a property", nameof(expr));
       }
 
-      return _values.ContainsKey((PropertyInfo)memberInfo);
+      return IsSet((PropertyInfo)memberInfo);
     }
 
     public IImmutableDictionary<string, object> GetUpdates()
       => GetUpdates(DefaultNameConverter.Instance);
 
     public IImmutableDictionary<string, object> GetUpdates(INameConverter nameConverter) =>
-      _values.ToImmutableDictionary(
-        kvp => nameConverter.GetName(kvp.Key),
-        kvp => kvp.Value);
+      _set.ToImmutableDictionary(
+        prop => nameConverter.GetName(prop),
+        prop => Property.Get(prop, _proxy));
   }
 }
