@@ -47,6 +47,9 @@ namespace YoloDev.PartialJson
     public IImmutableDictionary<string, object> GetUpdates()
       => GetUpdates(DefaultNameConverter.Instance);
 
+    public IImmutableDictionary<string, object> GetUpdates(Func<PropertyInfo, string> nameConverter) =>
+      GetUpdates(new FuncNameConverter(nameConverter));
+
     public IImmutableDictionary<string, object> GetUpdates(INameConverter nameConverter) =>
       _set.ToImmutableDictionary(
         prop => nameConverter.GetName(prop),

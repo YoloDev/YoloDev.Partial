@@ -1,8 +1,8 @@
-﻿using System.Reflection;
+using System.Reflection;
 
 namespace YoloDev.PartialJson
 {
-  class DefaultNameConverter : INameConverter
+  public sealed class DefaultNameConverter : INameConverter
   {
     public static INameConverter Instance { get; } = new DefaultNameConverter();
 
