@@ -8,7 +8,7 @@ using System.Reflection;
 namespace YoloDev.PartialJson
 {
   [JsonConverter(typeof(PartialConverter))]
-  public sealed class Partial<T> : IPartial<T>
+  internal sealed class Partial<T> : IPartial<T>
     where T : class
   {
     private readonly ISet<PropertyInfo> _set;
@@ -119,6 +119,40 @@ namespace YoloDev.PartialJson
           Property.Copy(prop, _proxy, target);
         }
       }
+    }
+  }
+
+  public class Partial
+  {
+    ImmutableDictionary<Type, Func<IPartial>> _factories =
+      ImmutableDictionary.Create<Type, Func<IPartial>>();
+
+    public IPartial<T> Create<T>()
+      where T : class
+    {
+      return new Partial<T>();
+    }
+
+    public IPartial Create(Type type)
+    {
+      var factory = ImmutableInterlocked.GetOrAdd(ref _factories, type, CreateFactory);
+      return factory();
+    }
+
+    private Func<IPartial> CreateFactory(Type type)
+    {
+      if (type.GetTypeInfo().IsValueType)
+      {
+        throw new ArgumentException("Type cannot be a value type", nameof(type));
+      }
+
+      var partialType = typeof(Partial<>).MakeGenericType(type);
+      var ctor = partialType.GetConstructor(Type.EmptyTypes);
+      var newExpr = Expression.New(ctor);
+      var convertedExpr = Expression.Convert(newExpr, typeof(IPartial));
+      var lambda = Expression.Lambda<Func<IPartial>>(convertedExpr);
+
+      return lambda.Compile();
     }
   }
 }
